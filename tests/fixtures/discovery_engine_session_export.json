@@ -1,0 +1,110 @@
+{
+  "session_id": "9c1f4a2e-7b3d-4e88-9f21-5a0c6d8e3b47",
+  "papers": [
+    {
+      "id": "4d7e2b91-0a3c-4f56-8b12-c9e7a5d1f803",
+      "title": "Tocilizumab in patients admitted to hospital with COVID-19 (RECOVERY): a randomised, controlled, open-label, platform trial",
+      "abstract": "In this randomised, controlled, open-label, platform trial, several possible treatments were compared with usual care in patients admitted to hospital with COVID-19. In patients with hypoxia and evidence of systemic inflammation, tocilizumab improved survival and other clinical outcomes.",
+      "year": 2021,
+      "venue": "The Lancet",
+      "external_ids": {
+        "s2_id": "8f4a1c9b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+        "doi": "10.1016/S0140-6736(21)00676-0",
+        "pubmed_id": "33933206"
+      },
+      "pdf_url": "https://www.thelancet.com/article/S0140-6736(21)00676-0/pdf",
+      "authors": ["Peter W Horby", "Guilherme Pessoa-Amorim", "Leon Peto", "Martin J Landray"]
+    },
+    {
+      "id": "b0c93f5a-16d4-42e7-9a8b-3f1e0d7c46a2",
+      "title": "Tocilizumab in patients admitted to hospital with COVID-19 (RECOVERY): a randomised, controlled, open-label, platform trial.",
+      "abstract": "Tocilizumab improved survival and other clinical outcomes in hospitalised COVID-19 patients with hypoxia and systemic inflammation.",
+      "year": 2021,
+      "venue": "Lancet (London, England)",
+      "external_ids": {
+        "pmid": "33933206",
+        "doi": "10.1016/S0140-6736(21)00676-0"
+      },
+      "pdf_url": null,
+      "authors": ["Peter W Horby", "Guilherme Pessoa-Amorim", "Leon Peto"]
+    },
+    {
+      "id": "27a5e8c4-9b61-4d03-8e7f-1a2b3c4d5e6f",
+      "title": "Dexamethasone in Hospitalized Patients with Covid-19",
+      "abstract": "In patients hospitalized with Covid-19, the use of dexamethasone resulted in lower 28-day mortality among those who were receiving either invasive mechanical ventilation or oxygen alone at randomization but not among those receiving no respiratory support.",
+      "year": 2021,
+      "venue": "New England Journal of Medicine",
+      "external_ids": {
+        "doi": "10.1056/NEJMoa2021436",
+        "orcid": "0000-0002-7910-0021"
+      },
+      "pdf_url": "https://www.nejm.org/doi/pdf/10.1056/NEJMoa2021436",
+      "authors": ["Peter Horby", "Wei Shen Lim", "Jonathan R Emberson"]
+    },
+    {
+      "id": "e6f1a930-5c72-4b8d-a041-7d9e2f3a1b5c",
+      "title": "Dexamethasone in Hospitalized Patients with Covid-19 - Preliminary Report",
+      "abstract": "Preliminary report of the RECOVERY randomised evaluation of dexamethasone in hospitalised patients with Covid-19.",
+      "year": 2020,
+      "venue": "The New England journal of medicine",
+      "external_ids": {
+        "s2_id": "1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d",
+        "doi": "10.1056/NEJMoa2021436",
+        "pubmed_id": "32678530"
+      },
+      "pdf_url": "https://www.nejm.org/doi/pdf/10.1056/NEJMoa2021436",
+      "authors": ["Peter Horby", "Wei Shen Lim", "Jonathan R Emberson"]
+    },
+    {
+      "id": "3a8b7c6d-5e4f-4102-9384-abcdef012345",
+      "title": "Attention Is All You Need",
+      "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms.",
+      "year": 2017,
+      "venue": "Advances in Neural Information Processing Systems",
+      "external_ids": {
+        "arxiv_id": "1706.03762",
+        "doi": "10.48550/arXiv.1706.03762"
+      },
+      "pdf_url": "https://arxiv.org/pdf/1706.03762",
+      "authors": ["Ashish Vaswani", "Noam Shazeer", "Niki Parmar"]
+    },
+    {
+      "id": "f5e4d3c2-b1a0-4987-8765-4321fedcba98",
+      "title": "Remdesivir for the Treatment of Covid-19 - Final Report",
+      "abstract": "Remdesivir was superior to placebo in shortening the time to recovery in adults who were hospitalized with Covid-19 and had evidence of lower respiratory tract infection.",
+      "year": 2020,
+      "venue": "The New England journal of medicine",
+      "external_ids": {
+        "pmid": "32445440",
+        "doi": "10.1056/NEJMoa2007764",
+        "europe_pmc_id": "MED:32445440"
+      },
+      "pdf_url": "https://europepmc.org/articles/PMC7262788?pdf=render",
+      "authors": ["John H Beigel", "Kay M Tomashek", "Lori E Dodd"]
+    },
+    {
+      "id": "0192a3b4-c5d6-4e7f-8091-a2b3c4d5e6f7",
+      "title": "Colchicine in patients admitted to hospital with COVID-19 (RECOVERY): a randomised, controlled, open-label, platform trial",
+      "abstract": "In adults hospitalised with COVID-19, colchicine was not associated with reductions in 28-day mortality, duration of hospital stay, or risk of progressing to invasive mechanical ventilation or death.",
+      "year": 2021,
+      "venue": "The Lancet Respiratory Medicine",
+      "external_ids": {
+        "openalex_id": "W4200123456",
+        "doi": "10.1016/S2213-2600(21)00435-5",
+        "pubmed_id": "34672950"
+      },
+      "pdf_url": null,
+      "authors": ["Peter W Horby", "Mark Campbell", "Jonathan R Emberson"]
+    },
+    {
+      "id": "aa11bb22-cc33-4d44-9e55-ff6677889900",
+      "title": "Report of the WHO-China Joint Mission on Coronavirus Disease 2019",
+      "abstract": null,
+      "year": 2020,
+      "venue": null,
+      "external_ids": {},
+      "pdf_url": null,
+      "authors": []
+    }
+  ]
+}

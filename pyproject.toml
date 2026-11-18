@@ -1,0 +1,168 @@
+# ==============================================================================
+# Evidence Review 8810 — Python project configuration
+# ==============================================================================
+# Scope is ER-001..ER-005, ER-006 (the human-authored lane) and the OUT-001
+# contract. FND-003..FND-015 are deliberately NOT implemented here.
+#
+# CORRECTED 2026-09-02: this block used to say "the jobs/outbox tables exist
+# because flow derivation needs an atomically-written record per domain result,
+# but no relay runs". The second half was true; THE FIRST HALF WAS NOT. Measured
+# against the production `evidence_review` database: 26 tables, and
+# `domain_outbox`, `durable_jobs` and `job_attempts` are not among them. Only
+# `operation_idempotency` (migration `0001`) exists. No migration has ever
+# created the other three.
+#
+# That matters to the next person who reads this file: `ER-006` allocates five
+# domain events and emits none, and the reason is not policy, it is that there
+# is no table to write them to. Emitting one means first creating the outbox,
+# which is `FND-003` and a different package.
+# `implementation-plans/01-evidence-review-8810.md:349-350` permits running
+# without a relay until a registered consumer and a replay fixture exist; it
+# does not claim the tables are there.
+
+[project]
+license = "Apache-2.0"
+name = "evidence-review-service"
+version = "0.1.0"
+description = "Evidence Review 8810 — protocol-locked reviews, reversible dedup, blinded dual screening, conflict adjudication, derived flow ledger and hash-sealed inclusion-set export"
+readme = "README.md"
+requires-python = ">=3.14"
+authors = [{ name = "KAG Team" }]
+dependencies = [
+    # Core framework
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    # Validation & settings
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    # Database. psycopg v3 — no asyncpg anywhere in the fleet.
+    "sqlalchemy>=2.0",
+    "psycopg[binary,pool]>=3.3.0",
+    "alembic>=1.14.0",
+    # Shared fleet library: tenant RLS DDL + GUC binding, the idempotency mixin,
+    # outbound auth conformance. Reused rather than reimplemented.
+    "kag-common @ git+https://github.com/nonagenticai/kag_common@v0.37.1",
+    # THE SEAL. FND-005 RFC 8785 canonical hashing. One implementation defines
+    # what a canonical hash IS; a second copy in this repo would be a second
+    # answer to that question.
+    # 0.3.0 is the floor because it is the first release that CONTAINS
+    # `schemas/evidence/inclusion-set-export.v2.schema.json`
+    # (`urn:datacompany:inclusion-set-export:2`), which is what `EXPORT_SCHEMA_REF`
+    # now names. Below it that ref does not resolve and every export seals
+    # through the bare-hash fallback — see `flow.seal_mode`. A loose floor would
+    # let a resolver pick a wheel in which the seal silently degrades, which is
+    # precisely the failure this dependency exists to end.
+    # (0.2.0 was the floor for `:1`, for the same reason and by the same
+    # argument. The floor moves with the ref, always — they are one fact written
+    # in two files.)
+    #
+    # 0.3.0 -> 0.4.0 BY THAT SAME RULE, for a SECOND ref. 0.4.0 is the first
+    # release containing `schemas/evidence/review-flow-ledger.v1.schema.json`
+    # (`urn:datacompany:review-flow-ledger:1`), which is what `LEDGER_SCHEMA_REF`
+    # now names. Below it that ref does not resolve,
+    # `tests/unit/test_the_flow_body_satisfies_its_released_contract.py` cannot
+    # validate anything, and `research_output_service` refuses every flow ledger
+    # this service serves with `contract_unresolvable`.
+    #
+    # Note what is NOT claimed: the ledger is not sealed. Nothing signs a
+    # projection recomputed on every read, and `compute_content_hash` is never
+    # called on it. The floor exists so a CONSUMER can validate what it is
+    # handed, which is a weaker promise than the export's and a real one.
+    # 0.9.0 released the twelve payload documents covering this service's eighteen
+    # wired events, plus the reusable N/N+1 compatibility comparator. The floor is
+    # what binds a consumer -- the lock does not travel with the wheel -- and
+    # `consumer_registry` now names real consumers, so a resolver that handed back
+    # 0.6.0 would make `test_no_consumer_outruns_its_schema` fail closed on a
+    # schema that exists.
+    "research-contracts @ git+https://github.com/nonagenticai/research_contracts@v0.10.0",
+    # Bibliographic import formats. RIS and CSV are parsed in-tree; bibtexparser
+    # covers BibTeX. XLSX is deliberately absent — ER-002.2 asks for it, but its
+    # only named consumers are Catchii/Cachii workbooks, which are blocked on
+    # AHTA-DISC-003/004, so it would add a supply-chain surface for zero
+    # first-run evidence.
+    "bibtexparser>=1.4.1,<2",
+    # HTTP client (discovery-engine session import)
+    "httpx>=0.28.0",
+    # Logging & monitoring
+    "structlog>=24.4.0",
+    "prometheus-client>=0.21.0",
+    # OpenTelemetry
+    "opentelemetry-api>=1.45.1",
+    "opentelemetry-sdk>=1.24.0",
+    "opentelemetry-exporter-otlp-proto-http>=1.24.0",
+    "opentelemetry-instrumentation-fastapi>=0.53b1",
+    "opentelemetry-instrumentation-httpx>=0.53b1",
+    "opentelemetry-instrumentation-sqlalchemy>=0.53b1",
+    # Utilities
+    "python-multipart>=0.0.31",
+    "python-dotenv>=1.0.1",
+    # Auth
+    "PyJWT>=2.15.1",
+    "cryptography>=48.0.1",
+    # Security-pinned transitives
+    "urllib3>=2.8.0",
+    "werkzeug>=3.1.6",
+    "protobuf>=6.33.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+# No `-m 'not integration'`. A deselect here is how a suite becomes advertised
+# coverage that CI never runs. --strict-markers is the fence instead: a marker
+# absent from `markers` below is a hard collection ERROR, not a silent no-op.
+addopts = "-v --strict-markers"
+timeout = 120
+timeout_method = "thread"
+markers = [
+    "unit: Unit tests (no external dependencies)",
+    "blinding: Reviewer-blinding leak tests (ER-004.2). Each must fail when its layer is removed.",
+    "security: Security-focused tests",
+    "slow: Tests that take longer to run",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "pytest-timeout>=2.3.1",
+    "pytest-mock>=3.14.0",
+    "httpx>=0.28.0",
+    "faker>=33.0.0",
+    "ruff>=0.15",
+    "ty>=0.0.23",
+    "bandit>=1.9.4",
+    "detect-secrets>=1.5.0",
+]
+
+[tool.coverage.report]
+fail_under = 85
+
+[tool.ty.environment]
+python-version = "3.14"
+extra-paths = ["src"]
+
+[tool.ty.rules]
+import-not-found = "ignore"
